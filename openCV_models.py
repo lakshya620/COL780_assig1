@@ -60,8 +60,7 @@ def bg_subtraction(inp_path,mog,eval_path,out_path):
         name = prefix+name
         
         cv2.imwrite(os.path.join(out_path,name),mask)
-        start += 1
-         
+        start += 1      
     return 
 
 
