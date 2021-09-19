@@ -53,9 +53,8 @@ class Running_avg:
         start=self.start
         img_names = os.listdir(inp_path)
         if not self.filled:
-            for i in range(max(start-self.count,0),start+1):
-                frame = cv2.imread(os.path.join(self.inp_path,img_names[i]))
-                self.frame_list.append(frame)
+            frame = cv2.imread(os.path.join(self.inp_path,img_names[start]))
+            self.frame_list.append(frame)
         else:
             self.frame_list.append(img)
             self.frame_list.pop(0)
@@ -82,7 +81,7 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
     eval_frames = eval_frames.split()          ## reading and processing eval_frames.txt into array on integers
     for i in range(len(eval_frames)):
         eval_frames[i]= int(eval_frames[i])
-    print(eval_frames)    
+    
     
     image_list = os.listdir(inp_path)
     
@@ -101,6 +100,7 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
         # frame = cv2.bilateralFilter(frame,5,50,25)
         frame=cv2.GaussianBlur(frame,(5,5),0)
         mask = model.apply(frame)                         
+        # print(i)
         kernel1 = cv2.getStructuringElement(cv2.MORPH_RECT,(5,5))
         kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(15,15))
        
