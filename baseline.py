@@ -9,6 +9,7 @@ import cv2
 import os
 import numpy as np
 
+    
 def laplacian_sharpening(image):
     kernel = np.array([[0,-1,0], [-1,5,-1], [0,-1,0]])
     image = cv2.filter2D(image, -1, kernel)
@@ -34,7 +35,7 @@ def bg_subtraction(inp_path,mog,eval_path,out_path):
     output_masks = []
     for i in range(len(image_list)):
         frame = cv2.imread(os.path.join(inp_path,image_list[i]))
-        frame = cv2.bilateralFilter(frame,5,50,25)
+        frame = cv2.bilateralFilter(frame,5,50,25) 
         mask = model.apply(frame)                         ## updating the backgorund model and storing the masks obtained
         
         if not mog:
@@ -61,6 +62,9 @@ def bg_subtraction(inp_path,mog,eval_path,out_path):
         
         cv2.imwrite(os.path.join(out_path,name),mask)
         start += 1      
+        
+    cv2.destroyAllWindows()
+
     return 
 
 
