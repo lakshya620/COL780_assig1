@@ -8,14 +8,17 @@ Lakshya  2018EE10222
 import cv2
 import os
 import numpy as np
+
 def show_img(img):
     cv2.imshow("Mask",img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+    
 def laplacian_sharpening(image):
     kernel = np.array([[0,-1,0], [-1,5,-1], [0,-1,0]])
     image = cv2.filter2D(image, -1, kernel)
     return image
+
 class Simple_avg:
     def __init__(self,eval_frames,inp_path):
         self.start=eval_frames[0]
@@ -29,49 +32,13 @@ class Simple_avg:
         avg_frame=np.mean(frame_list,axis=0)
         self.avg_frame=avg_frame.astype(np.uint8)
         self.avg_frame=cv2.cvtColor(self.avg_frame, cv2.COLOR_BGR2GRAY)
-       
-        # print((self.avg_frame))
         
         
     def apply(self,img):
         mask=cv2.subtract(self.avg_frame,cv2.cvtColor(img,cv2.COLOR_BGR2GRAY))
-        # mask=img-self.avg_frame
         (thresh, blackAndWhiteImage) = cv2.threshold(mask, 30, 255, cv2.THRESH_BINARY)
-
-        # cv2.normalize(mask,mask,0,255,cv2.NORM_MINMAX)
         return blackAndWhiteImage
-    
-class Running_avg:
-    def __init__(self,inp_path,eval_frames,count=100):
-        self.inp_path=inp_path
-        self.count=count
-        self.start=0
-        self.frame_list=[]
-        self.filled=False
-       
-    def apply(self,img):
-        start=self.start
-        img_names = os.listdir(inp_path)
-        if not self.filled:
-            frame = cv2.imread(os.path.join(self.inp_path,img_names[start]))
-            self.frame_list.append(frame)
-        else:
-            self.frame_list.append(img)
-            self.frame_list.pop(0)
-        if(len(self.frame_list)==self.count):
-            self.filled=True
-        frame_list=np.array(self.frame_list)
-        avg_frame=np.mean(frame_list,axis=0)
-        avg_frame=avg_frame.astype(np.uint8)
-        avg_frame=cv2.cvtColor(avg_frame, cv2.COLOR_BGR2GRAY)
-        mask=cv2.subtract(avg_frame,cv2.cvtColor(img,cv2.COLOR_BGR2GRAY))
-        (thresh, blackAndWhiteImage) = cv2.threshold(mask, 30, 255, cv2.THRESH_BINARY)
-        self.start+=1
         
-        return blackAndWhiteImage       
-        
-    
-    
     
 def bg_subtraction(inp_path,model_type,eval_path,out_path):
        
@@ -91,21 +58,16 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
         model = cv2.createBackgroundSubtractorKNN(dist2Threshold=500,detectShadows=False)
     elif model_type==3:
         model=Simple_avg(eval_frames,inp_path)
-    else:
-        model=Running_avg(inp_path,eval_frames)
-    # show_img(model.avg_frame)
+
     output_masks = []
     for i in range(len(image_list)):
         frame = cv2.imread(os.path.join(inp_path,image_list[i]))
-        # frame = cv2.bilateralFilter(frame,5,50,25)
-        frame=cv2.GaussianBlur(frame,(5,5),0)
+        frame = cv2.bilateralFilter(frame,5,50,25)
         mask = model.apply(frame)                         
-        # print(i)
+
         kernel1 = cv2.getStructuringElement(cv2.MORPH_RECT,(5,5))
         kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(15,15))
        
-        
-                    
         if i >= (eval_frames[0]-1) and i <= (eval_frames[1]-1):    
             mask = cv2.morphologyEx(mask,cv2.MORPH_OPEN,kernel1)
             mask = cv2.morphologyEx(mask,cv2.MORPH_CLOSE,kernel2)
@@ -127,9 +89,13 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
 
 
 
+#################################################################################
 inp_path = "COL780_A1_Data/moving_bg/input"
 eval_path = "COL780_A1_Data/moving_bg/eval_frames.txt"
 out_path = "COL780_A1_Data/moving_bg/predicted"
-mod = 4
-# model=Simple_avg([10,20], inp_path)
+mod = 2
 bg_subtraction(inp_path, mod, eval_path, out_path)
+
+"""
+python eval.py -p=COL780_A1_Data/moving_bg/predicted -g=COL780_A1_Data/moving_bg/groundtruth
+"""
