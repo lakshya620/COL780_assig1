@@ -7,20 +7,9 @@ Lakshya  2018EE10222
 
 import cv2
 import os
-import numpy as np
-from simple_avg import Simple_avg
+from utilities import Simple_avg
+from utilities import laplacian_sharpening
 
-def show_img(img):
-    cv2.imshow("Mask",img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    
-def laplacian_sharpening(image):
-    kernel = np.array([[0,-1,0], [-1,5,-1], [0,-1,0]])
-    image = cv2.filter2D(image, -1, kernel)
-    return image
-    
-    
 def bg_subtraction(inp_path,model_type,eval_path,out_path):
        
     eval_frame_file = open(eval_path,'r')

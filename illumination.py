@@ -7,36 +7,10 @@ Lakshya  2018EE10222
 
 import cv2
 import os
-import numpy as np
-from simple_avg import Simple_avg
+from utilities import Simple_avg
+from utilities import laplacian_sharpening
+from utilities import shadow_removal
 
-def show_img(img):
-    cv2.imshow("Mask",img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-def unsharp_masking(frame):
-    image=cv2.GaussianBlur(frame, (5, 5), 0)
-    image =cv2.addWeighted(frame, 1.5, image, -0.5,0.0)
-    return image
-def laplacian_sharpening(image):
-    kernel = np.array([[0,-1,0], [-1,5,-1], [0,-1,0]])
-    image = cv2.filter2D(image, -1, kernel)
-    return image
-        
-def shadow_removal(img):
-    rgb_channels= cv2.split(img)
-
-    result_channels = []
-
-    kernel=np.ones((7,7), np.uint8)
-    for channel in rgb_channels:
-        img = cv2.dilate(channel, kernel)
-        img = cv2.medianBlur(img, 21)
-        img = 255 - cv2.absdiff(channel, img)
-        result_channels.append(img)
-    
-    ans = cv2.merge(result_channels)
-    return ans
     
 def bg_subtraction(inp_path,model_type,eval_path,out_path):
        
@@ -71,8 +45,6 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
         
         frame=cv2.merge((l,a,b));
         frame=cv2.cvtColor(frame,cv2.COLOR_LAB2BGR);
-        name=f"{i}.png"
-        cv2.imwrite(os.path.join(out_path+"/preprocessed/",name),frame)
         mask = model.apply(frame)                         
 
         kernel1 = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
