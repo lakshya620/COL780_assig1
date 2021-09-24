@@ -37,7 +37,7 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
         mask = model.apply(frame)                         
 
         kernel1 = cv2.getStructuringElement(cv2.MORPH_RECT,(5,5))
-        kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(15,15))
+        kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(7,7))
        
         if i >= (eval_frames[0]-1) and i <= (eval_frames[1]-1):    
             mask = cv2.morphologyEx(mask,cv2.MORPH_OPEN,kernel1)
