@@ -44,20 +44,17 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
     output_masks = []
     for i in range(len(image_list)):
         frame = cv2.imread(os.path.join(inp_path,image_list[i]))
-        frame = cv2.bilateralFilter(frame,5,50,25)
-        mask = model.apply(frame)  
+        frame = laplacian_sharpening(frame)
+        mask = model.apply(frame)
 
-        if model_type==1:                       
-            kernel1 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(2,2))
-            kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(7,7))
-        else:
-            kernel1 = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
-            kernel2 = cv2.getStructuringElement(cv2.MORPH_RECT,(7,7)) 
+        kernel1 = cv2.getStructuringElement(cv2.MORPH_RECT,(5,5))
+        kernel2 = cv2.getStructuringElement(cv2.MORPH_RECT,(7,7)) 
         
                     
-        if i >= (eval_frames[0]-1) and i <= (eval_frames[1]-1):  
+        if i >= (eval_frames[0]-1) and i <= (eval_frames[1]-1): 
             mask = cv2.morphologyEx(mask,cv2.MORPH_OPEN,kernel1)
             mask = cv2.morphologyEx(mask,cv2.MORPH_CLOSE,kernel2)
+            mask = cv2.GaussianBlur(mask,(5,5),0)
             mask = laplacian_sharpening(mask)
             output_masks.append(mask)
      
@@ -76,12 +73,12 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
 
 
 ########################################################################################
-inp_path = "COL780_A1_Data/baseline/input"
-eval_path = "COL780_A1_Data/baseline/eval_frames.txt"
-out_path = "COL780_A1_Data/baseline/predicted"
+inp_path = "COL780_A1_Data/jitter/input"
+eval_path = "COL780_A1_Data/jitter/eval_frames.txt"
+out_path = "COL780_A1_Data/jitter/predicted"
 mod = 2
 bg_subtraction(inp_path, mod, eval_path, out_path)
 
 """
-python eval.py -p=COL780_A1_Data/baseline/predicted -g=COL780_A1_Data/baseline/groundtruth
+python eval.py -p=COL780_A1_Data/jitter/predicted -g=COL780_A1_Data/jitter/groundtruth
 """
