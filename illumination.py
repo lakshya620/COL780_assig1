@@ -33,14 +33,7 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
         frame = cv2.imread(os.path.join(inp_path,image_list[i]))
         frame = cv2.bilateralFilter(frame,5,200,25)
         frame = normalize(frame)
-        
         frame=shadow_removal(frame)                               
-        frame=cv2.cvtColor(frame,cv2.COLOR_BGR2LAB)
-        l,a,b=cv2.split(frame) 
-        l= cv2.adaptiveThreshold(l, 255, cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY, 199, 5) 
-        frame=cv2.merge((l,a,b));
-        frame=cv2.cvtColor(frame,cv2.COLOR_LAB2BGR)
-           
         mask = model.apply(frame)                         
 
         kernel1 = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
@@ -62,7 +55,6 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
         for  i in range(num_zeros):
             prefix += "0"                   ## saving the predictions into png format
         name = prefix+name
-        
         cv2.imwrite(os.path.join(out_path,name),mask)
         start += 1      
     return 

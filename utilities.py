@@ -36,3 +36,11 @@ def normalize(img):
     var = np.zeros(img.shape)
     var = cv2.normalize(img,var,50,200,cv2.NORM_MINMAX)
     return var
+
+def adaptive_thresholding(frame):
+    frame=cv2.cvtColor(frame,cv2.COLOR_BGR2LAB)
+    l,a,b=cv2.split(frame) 
+    l= cv2.adaptiveThreshold(l, 255, cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY, 199, 5) 
+    frame=cv2.merge((l,a,b));
+    frame=cv2.cvtColor(frame,cv2.COLOR_LAB2BGR)
+    return frame
