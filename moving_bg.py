@@ -31,6 +31,11 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
         frame = cv2.imread(os.path.join(inp_path,image_list[i]))
         frame = cv2.pyrDown(frame)
     
+
+        # frame = cv2.bilateralFilter(frame,5,200,25)
+        # name=f"{i}.png"
+        # cv2.imwrite(os.path.join(out_path+"/preprocessed/",name),frame)
+
         mask = model.apply(frame)                         
 
         kernel1 = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
