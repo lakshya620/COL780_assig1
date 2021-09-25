@@ -7,7 +7,6 @@ Lakshya  2018EE10222
 
 import cv2
 import os
-from utilities import Simple_avg
 from utilities import laplacian_sharpening
 from utilities import shadow_removal
 
@@ -28,8 +27,6 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
         model = cv2.createBackgroundSubtractorMOG2(history=500,varThreshold=40,detectShadows=False)
     elif model_type==2:                                               ## chosing the model
         model = cv2.createBackgroundSubtractorKNN(dist2Threshold=800,detectShadows=False)
-    elif model_type==3:
-        model=Simple_avg(eval_frames,inp_path)
 
     output_masks = []
     for i in range(len(image_list)):
@@ -37,14 +34,13 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
         frame = cv2.bilateralFilter(frame,5,200,25)
         
         
-        frame=shadow_removal(frame)                                  
+        frame=shadow_removal(frame)                               
         frame=cv2.cvtColor(frame,cv2.COLOR_BGR2LAB)
-        l,a,b=cv2.split(frame)
-        
-        l= cv2.adaptiveThreshold(l, 255, cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY, 199, 5)
-        
+        l,a,b=cv2.split(frame) 
+        l= cv2.adaptiveThreshold(l, 255, cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY, 199, 5) 
         frame=cv2.merge((l,a,b));
-        frame=cv2.cvtColor(frame,cv2.COLOR_LAB2BGR);
+        frame=cv2.cvtColor(frame,cv2.COLOR_LAB2BGR)
+           
         mask = model.apply(frame)                         
 
         kernel1 = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
@@ -77,7 +73,7 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
 inp_path = "COL780_A1_Data/illumination/input"
 eval_path = "COL780_A1_Data/illumination/eval_frames.txt"
 out_path = "COL780_A1_Data/illumination/predicted"
-mod = 2
+mod = 1
 bg_subtraction(inp_path, mod, eval_path, out_path)
 
 """

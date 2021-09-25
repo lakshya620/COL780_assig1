@@ -7,7 +7,6 @@ Lakshya  2018EE10222
 
 import cv2
 import os
-from utilities import Simple_avg
 from utilities import laplacian_sharpening
 
 def bg_subtraction(inp_path,model_type,eval_path,out_path):
@@ -26,8 +25,6 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
         model = cv2.createBackgroundSubtractorMOG2(history=500,varThreshold=40,detectShadows=False)
     elif model_type==2:                                               ## chosing the model
         model = cv2.createBackgroundSubtractorKNN(dist2Threshold=500,detectShadows=False)
-    elif model_type==3:
-        model=Simple_avg(eval_frames,inp_path)
     
     
     output_masks = []
