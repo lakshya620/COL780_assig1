@@ -31,3 +31,8 @@ def shadow_removal(img):
     
     img = cv2.merge(result_channels)
     return img
+
+def normalize(img):
+    var = np.zeros(img.shape)
+    var = cv2.normalize(img,var,50,200,cv2.NORM_MINMAX)
+    return var

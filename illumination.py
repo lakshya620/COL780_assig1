@@ -9,7 +9,7 @@ import cv2
 import os
 from utilities import laplacian_sharpening
 from utilities import shadow_removal
-
+from utilities import normalize
     
 def bg_subtraction(inp_path,model_type,eval_path,out_path):
        
@@ -24,15 +24,15 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
     image_list = os.listdir(inp_path)
     
     if model_type==1:
-        model = cv2.createBackgroundSubtractorMOG2(history=500,varThreshold=40,detectShadows=False)
+        model = cv2.createBackgroundSubtractorMOG2(history=100,varThreshold=40,detectShadows=False)
     elif model_type==2:                                               ## chosing the model
-        model = cv2.createBackgroundSubtractorKNN(dist2Threshold=800,detectShadows=False)
+        model = cv2.createBackgroundSubtractorKNN(dist2Threshold=100,detectShadows=False)
 
     output_masks = []
     for i in range(len(image_list)):
         frame = cv2.imread(os.path.join(inp_path,image_list[i]))
         frame = cv2.bilateralFilter(frame,5,200,25)
-        
+        frame = normalize(frame)
         
         frame=shadow_removal(frame)                               
         frame=cv2.cvtColor(frame,cv2.COLOR_BGR2LAB)

@@ -30,7 +30,7 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
     output_masks = []
     for i in range(len(image_list)):
         frame = cv2.imread(os.path.join(inp_path,image_list[i]))
-        frame = cv2.bilateralFilter(frame,5,50,25)
+        frame = cv2.bilateralFilter(frame,5,200,25)
         mask = model.apply(frame)                         
 
         kernel1 = cv2.getStructuringElement(cv2.MORPH_RECT,(5,5))
