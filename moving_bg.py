@@ -30,13 +30,17 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
     output_masks = []
     for i in range(len(image_list)):
         frame = cv2.imread(os.path.join(inp_path,image_list[i]))
-        frame = cv2.bilateralFilter(frame,5,200,25)
+        frame = cv2.pyrDown(frame)
+    
+        # frame = cv2.bilateralFilter(frame,5,200,25)
+        # name=f"{i}.png"
+        # cv2.imwrite(os.path.join(out_path+"/preprocessed/",name),frame)
         mask = model.apply(frame)                         
 
-        kernel1 = cv2.getStructuringElement(cv2.MORPH_RECT,(5,5))
+        kernel1 = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
         kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(7,7))
        
-        if i >= (eval_frames[0]-1) and i <= (eval_frames[1]-1):    
+        if i >= (eval_frames[0]-1) and i <= (eval_frames[1]-1):
             mask = cv2.morphologyEx(mask,cv2.MORPH_OPEN,kernel1)
             mask = cv2.morphologyEx(mask,cv2.MORPH_CLOSE,kernel2)
             mask = laplacian_sharpening(mask)
@@ -50,7 +54,7 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
         for  i in range(num_zeros):
             prefix += "0"                   ## saving the predictions into png format
         name = prefix+name
-        
+        mask = cv2.pyrUp(mask)
         cv2.imwrite(os.path.join(out_path,name),mask)
         start += 1      
     return 
