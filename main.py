@@ -6,9 +6,13 @@ Lakshya  2018EE10222
 """
 
 import os
-import cv2
 import argparse
-import numpy as np
+from baseline import bg_subtraction as b
+from illumination import bg_subtraction as i
+from jitter import bg_subtraction as j
+from moving_bg import bg_subtraction as m
+from ptz import bg_subtraction as p
+
 
 
 def parse_args():
@@ -26,28 +30,38 @@ def parse_args():
 
 
 def baseline_bgs(args):
-    #TODO complete this function
-    pass
+    if not os.path.isdir(args.out_path):
+        os.mkdir(args.out_path)
+    b(args.inp_path,2,args.eval_frames,args.out_path)
+    return
 
 
 def illumination_bgs(args):
-    #TODO complete this function
-    pass
+    if not os.path.isdir(args.out_path):
+        os.mkdir(args.out_path)
+    i(args.inp_path,1,args.eval_frames,args.out_path)
+    return
 
 
 def jitter_bgs(args):
-    #TODO complete this function
-    pass
+    if not os.path.isdir(args.out_path):
+        os.mkdir(args.out_path)
+    j(args.inp_path,2,args.eval_frames,args.out_path)
+    return
 
 
 def dynamic_bgs(args):
-    #TODO complete this function
-    pass
+    if not os.path.isdir(args.out_path):
+        os.mkdir(args.out_path)
+    m(args.inp_path,2,args.eval_frames,args.out_path)
+    return
 
 
 def ptz_bgs(args):
-    #TODO: (Optional) complete this function
-    pass
+    if not os.path.isdir(args.out_path):
+        os.mkdir(args.out_path)
+    p(args.inp_path,2,args.eval_frames,args.out_path)
+    return
 
 
 def main(args):
@@ -66,3 +80,8 @@ def main(args):
 if __name__ == "__main__":
     args = parse_args()
     main(args)
+    
+    
+"""
+python main.py -i=COL780_A1_Data/baseline/input -o=COL780_A1_Data/baseline/predicted -e=COL780_A1_Data/baseline/eval_frames.txt -c="b"
+"""

@@ -62,11 +62,13 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
 
 
 #################################################################################
+"""
 inp_path = "COL780_A1_Data/illumination/input"
 eval_path = "COL780_A1_Data/illumination/eval_frames.txt"
 out_path = "COL780_A1_Data/illumination/predicted"
 mod = 1
 bg_subtraction(inp_path, mod, eval_path, out_path)
+"""
 
 """
 python eval.py -p=COL780_A1_Data/illumination/predicted -g=COL780_A1_Data/illumination/groundtruth
