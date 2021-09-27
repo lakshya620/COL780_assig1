@@ -20,6 +20,7 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
     
     
     image_list = os.listdir(inp_path)
+    image_list.sort()
     
     if model_type==1:
         model = cv2.createBackgroundSubtractorMOG2(history=500,varThreshold=40,detectShadows=False)

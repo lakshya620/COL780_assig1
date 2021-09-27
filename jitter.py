@@ -20,6 +20,7 @@ def bg_subtraction(inp_path,model_type,eval_path,out_path):
     
     
     image_list = os.listdir(inp_path)
+    image_list.sort()
     
     if model_type==1:
         model = cv2.createBackgroundSubtractorMOG2(history=500,varThreshold=40,detectShadows=False)
@@ -65,6 +66,7 @@ out_path = "COL780_A1_Data/jitter/predicted"
 mod = 2
 bg_subtraction(inp_path, mod, eval_path, out_path)
 """
+
 
 """
 python eval.py -p=COL780_A1_Data/jitter/predicted -g=COL780_A1_Data/jitter/groundtruth
