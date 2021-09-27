@@ -65,7 +65,7 @@ def ptz_bgs(args):
 
 
 def main(args):
-    if args.category not in "bijdp":
+    if args.category not in "bijmp":
         raise ValueError("category should be one of b/i/j/m/p - Found: %s"%args.category)
     FUNCTION_MAPPER = {
             "b": baseline_bgs,
