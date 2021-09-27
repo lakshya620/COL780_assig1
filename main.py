@@ -60,7 +60,7 @@ def dynamic_bgs(args):
 def ptz_bgs(args):
     if not os.path.isdir(args.out_path):
         os.mkdir(args.out_path)
-    p(args.inp_path,2,args.eval_frames,args.out_path)
+    p(args.inp_path,1,args.eval_frames,args.out_path)
     return
 
 
